@@ -29,6 +29,9 @@ def main():
             assert amount.startswith("$")
             amount = float(amount.replace("$", "").replace(",", ""))
 
+            # FIXME: I think this is the grantee's city, which is
+            # different from affected_cities. Not sure if we want to
+            # use it.
             city = li.find("div", {"class": "city"}).text.strip()
             assert city.startswith("city:")
             city = city[len("city:"):].strip()
@@ -41,6 +44,10 @@ def main():
             description = details.find("div",
                                        {"class": "brief-description"}).text.strip()
 
+            program = ""
+            initiative = ""
+            sub_program = ""
+            investigator = ""
             for label in details.find_all("span", {"class": "label"}):
                 label_text = label.text.strip()
                 if label_text == "Program":
@@ -51,6 +58,10 @@ def main():
                     sub_program = label.next_sibling.strip()
                 elif label_text == "Investigator":
                     investigator = label.next_sibling.strip()
+
+            notes = (("grant investigator: " + investigator if investigator else "") +
+                     ("initiative: " + initiative if initiative else "") +
+                     description)
 
             url = ("https://sloan.org" +
                    details.find("footer").find("a",
@@ -63,10 +74,10 @@ def main():
                 mysql_quote(year + "-01-01"),  # donation_date
                 mysql_quote("year"),  # donation_date_precision
                 mysql_quote("donation log"),  # donation_date_basis
-                mysql_quote("FIXME"),  # cause_area
+                mysql_quote(program + "/" + sub_program),  # cause_area
                 mysql_quote(url),  # url
                 mysql_quote("FIXME"),  # donor_cause_area_url
-                mysql_quote(""),  # notes
+                mysql_quote(notes),  # notes
                 mysql_quote(""),  # affected_countries
                 mysql_quote(""),  # affected_states
                 mysql_quote(""),  # affected_cities
