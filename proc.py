@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import pdb
-
 import bs4
 from bs4 import BeautifulSoup
 
