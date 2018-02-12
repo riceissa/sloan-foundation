@@ -68,7 +68,7 @@ def main():
             url = ("https://sloan.org" +
                    details.find("footer").find("a",
                                                {"class": "permalink"}).get("href"))
-            
+
             print(("    " if first else "    ,") + "(" + ",".join([
                 mysql_quote("Sloan Foundation"),  # donor
                 mysql_quote(grantee),  # donee
@@ -101,7 +101,7 @@ def mysql_quote(x):
     x = x.replace("'", "''")
     x = x.replace("\n", "\\n")
     return "'{}'".format(x)
-        
+
 
 if __name__ == "__main__":
     main()
