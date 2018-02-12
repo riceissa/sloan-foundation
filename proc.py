@@ -59,9 +59,11 @@ def main():
                 elif label_text == "Investigator":
                     investigator = label.next_sibling.strip()
 
-            notes = (("grant investigator: " + investigator if investigator else "") +
-                     ("initiative: " + initiative if initiative else "") +
-                     description)
+            notes = ((" grant investigator: " + investigator + ";" if investigator else "") +
+                     (" initiative: " + initiative + ";" if initiative else "") +
+                     " " + description[0].lower() + description[1:])
+            notes = notes.strip()
+            notes = notes[0].upper() + notes[1:]
 
             url = ("https://sloan.org" +
                    details.find("footer").find("a",
