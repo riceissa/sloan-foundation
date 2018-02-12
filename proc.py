@@ -2,6 +2,7 @@
 
 import pdb
 
+import bs4
 from bs4 import BeautifulSoup
 
 
@@ -16,25 +17,27 @@ def main():
         soup = BeautifulSoup(f, "lxml")
         data_list = soup.find("ul", {"class": "data-list"})
         for li in data_list:
-            pdb.set_trace()
+            # Sometimes we get empty items so skip those
+            if isinstance(li, bs4.element.NavigableString) and not li.strip():
+                continue
             
             grantee = li.find("div", {"class": "grantee"}).text.strip()
-            assert grantee.startswith("grantee: ")
-            grantee = grantee[len("grantee: "):]
+            assert grantee.startswith("grantee:")
+            grantee = grantee[len("grantee:"):].strip()
 
             amount = li.find("div", {"class": "amount"}).text.strip()
-            assert amount.startswith("amount: ")
-            amount = amount[len("amount: "):]
+            assert amount.startswith("amount:")
+            amount = amount[len("amount:"):].strip()
             assert amount.startswith("$")
             amount = float(amount.replace("$", "").replace(",", ""))
 
             city = li.find("div", {"class": "city"}).text.strip()
-            assert city.startswith("city: ")
-            city = city[len("city: "):]            
+            assert city.startswith("city:")
+            city = city[len("city:"):].strip()
 
             year = li.find("div", {"class": "year"}).text.strip()
-            assert year.startswith("year: ")
-            year = year[len("year: "):]
+            assert year.startswith("year:")
+            year = year[len("year:"):].strip()
 
             details = li.find("div", {"class": "details"})
             description = details.find("div",
