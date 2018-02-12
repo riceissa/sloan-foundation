@@ -10,7 +10,7 @@ def main():
     donation_date_precision, donation_date_basis, cause_area, url,
     donor_cause_area_url, notes, affected_countries, affected_states,
     affected_cities, affected_regions) values""")
-    
+
     with open("data.html", "r") as f:
         soup = BeautifulSoup(f, "lxml")
         data_list = soup.find("ul", {"class": "data-list"})
@@ -18,7 +18,7 @@ def main():
             # Sometimes we get empty items so skip those
             if isinstance(li, bs4.element.NavigableString) and not li.strip():
                 continue
-            
+
             grantee = li.find("div", {"class": "grantee"}).text.strip()
             assert grantee.startswith("grantee:")
             grantee = grantee[len("grantee:"):].strip()
